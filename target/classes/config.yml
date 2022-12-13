@@ -1,0 +1,10 @@
+db_host: "localhost"
+db_user: "root"
+db_pass: "1234"
+db_name: "test"
+
+#lundi 0, mardi 1, mercredi 2, jeudi 3, vendredi 4, samedi 5, dimanche 6
+day: 6
+#Fuseau horaire Paris/Europe
+hour: 23
+minutes: 59
