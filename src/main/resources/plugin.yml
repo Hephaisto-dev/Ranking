@@ -1,5 +1,5 @@
-name: ClassementHebdo
-author: BuvanceOG
-main: fr.worldofnation.ranking.Ranking
-version: 1.0.0
-depend: [Factions, WorldOfNations, Vault]
+name: Ranking
+version: '${version}'
+main: fr.hephaisto.ranking.Ranking
+authors: [ Hephaisto ]
+description: Plugin for in game ranking

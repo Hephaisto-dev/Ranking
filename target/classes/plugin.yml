@@ -1,5 +1,0 @@
-name: ClassementHebdo
-author: BuvanceOG
-main: fr.worldofnation.ranking.Ranking
-version: 1.0.0
-depend: [Factions, WorldOfNations, Vault]
