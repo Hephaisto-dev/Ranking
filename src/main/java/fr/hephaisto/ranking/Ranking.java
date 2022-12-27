@@ -1,5 +1,6 @@
 package fr.hephaisto.ranking;
 
+import fr.hephaisto.ranking.listeners.PlayHoursListener;
 import fr.hephaisto.ranking.sql.Database;
 import fr.hephaisto.ranking.tasks.TaskManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +18,8 @@ public final class Ranking extends JavaPlugin {
 
         TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
         taskManager.scheduleTasks();
+
+        getServer().getPluginManager().registerEvents(new PlayHoursListener(), this);
     }
 
     @Override
