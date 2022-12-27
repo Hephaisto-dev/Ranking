@@ -4,11 +4,9 @@ import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
 
-public class ManagementCalculator implements Calculator{
-    private final Ranking plugin;
-
+public class ManagementCalculator extends AbstractCalculator{
     public ManagementCalculator(Ranking plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     public double compute(Faction faction) {
