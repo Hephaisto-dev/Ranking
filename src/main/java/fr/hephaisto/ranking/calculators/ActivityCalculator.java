@@ -13,7 +13,7 @@ public class ActivityCalculator implements Calculator {
         this.plugin = plugin;
     }
 
-    public int compute(Faction faction) {
+    public double compute(Faction faction) {
         double minHours = plugin.getConfig().getDouble("criteria.activity.min-hours");
         double l = faction.getUPlayers().stream()
                 .map(this::retrieveOnlineTime)
@@ -27,10 +27,10 @@ public class ActivityCalculator implements Calculator {
                 .filter(percent -> l >= percent)
                 .max();
         if (optionalDouble.isPresent()) {
-            return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
+            return plugin.getConfig().getDouble("criteria.activity.points-per-percent." +
                     optionalDouble.getAsDouble());
         }
-        return 0;
+        return 0d;
     }
 
     private long retrieveOnlineTime(UPlayer uPlayer) {
