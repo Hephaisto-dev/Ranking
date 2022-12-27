@@ -20,7 +20,7 @@ public class TaskManager {
             for (FactionColl coll : FactionColls.get().getColls()) {
                 Faction faction = coll.getByName(factionName);
                 if (faction != null) {
-                    factionsComputeTasks.add(new ComputeTask(faction, lastUpdate));
+                    factionsComputeTasks.add(new ComputeTask(faction, lastUpdate, plugin));
                 }
             }
         });
