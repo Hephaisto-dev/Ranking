@@ -1,12 +1,15 @@
 package fr.hephaisto.ranking.sql;
 
-import com.massivecraft.factions.Factions;
 import fr.hephaisto.ranking.Ranking;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Database {

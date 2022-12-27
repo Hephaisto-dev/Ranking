@@ -35,7 +35,7 @@ public class ActivityCalculator extends AbstractCalculator {
     }
 
     private long retrieveOnlineTime(UPlayer uPlayer) {
-        //TDOO retrieve online time
+        // TODO retrieve online time
         return 0;
     }
 

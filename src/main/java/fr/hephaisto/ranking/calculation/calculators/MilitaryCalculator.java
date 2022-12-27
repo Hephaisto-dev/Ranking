@@ -21,7 +21,7 @@ public class MilitaryCalculator extends AbstractCalculator {
         double maxPointsAllies = plugin.getConfig().getInt("criteria.military.max-points-allies");
         double pointsPerEnemy = plugin.getConfig().getDouble("criteria.military.points-per-enemy");
         double maxPointsEnemies = plugin.getConfig().getInt("criteria.military.max-points-enemies");
-        double ratioPointsScoreZone = plugin.getConfig().getDouble("criteria.military.ratio-points-scorezone");
+        double ratioPointsScoreZone = plugin.getConfig().getDouble("criteria.military.ratio-points-score-zone");
         FactionData factionData = Core.getPlugin().getStatsManager().getFaction(faction.getName());
         points += Math.min(getAllyCount(faction) * pointsPerAlly, maxPointsAllies);
         points += Math.min(getEnemyCount(faction) * pointsPerEnemy, maxPointsEnemies);
