@@ -38,4 +38,8 @@ public final class Ranking extends JavaPlugin {
     public CalculatorManager getCalculatorManager() {
         return calculatorManager;
     }
+
+    public Database getDb() {
+        return database;
+    }
 }

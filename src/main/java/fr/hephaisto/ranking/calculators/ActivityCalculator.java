@@ -6,11 +6,9 @@ import fr.hephaisto.ranking.Ranking;
 
 import java.util.OptionalDouble;
 
-public class ActivityCalculator implements Calculator {
-    private final Ranking plugin;
-
+public class ActivityCalculator extends AbstractCalculator {
     public ActivityCalculator(Ranking plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     public double compute(Faction faction) {
