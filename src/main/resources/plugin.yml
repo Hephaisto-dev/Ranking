@@ -6,4 +6,5 @@ description: Plugin for in game ranking
 depend:
   - Factions
   - WorldOfNations
+  - MassiveCore
   - Vault
