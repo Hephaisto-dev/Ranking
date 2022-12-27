@@ -18,9 +18,9 @@ public class CalculatorManager {
     }
 
     public void compute(Faction faction) {
-        double totalScore = calculators.stream()
+        double totalScore = NumberUtils.round(calculators.stream()
                 .mapToDouble(calculator -> NumberUtils.round(calculator.compute(faction)))
-                .sum();
+                .sum());
         //TODO update db
     }
 }
