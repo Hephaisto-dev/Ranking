@@ -1,6 +1,7 @@
 package fr.hephaisto.ranking.calculation;
 
 import com.massivecraft.factions.entity.Faction;
+import fr.hephaisto.ranking.utils.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,9 @@ public class CalculatorManager {
     }
 
     public void compute(Faction faction) {
-        calculators.forEach(calculator -> calculator.compute(faction));
+        double totalScore = calculators.stream()
+                .mapToDouble(calculator -> NumberUtils.round(calculator.compute(faction)))
+                .sum();
         //TODO update db
     }
 }
