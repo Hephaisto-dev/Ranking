@@ -1,14 +1,16 @@
-package fr.hephaisto.ranking.calculators;
+package fr.hephaisto.ranking.calculation.calculators;
 
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
+import fr.hephaisto.ranking.calculation.AbstractCalculator;
 
-public class ManagementCalculator extends AbstractCalculator{
+public class ManagementCalculator extends AbstractCalculator {
     public ManagementCalculator(Ranking plugin) {
         super(plugin);
     }
 
+    @Override
     public double compute(Faction faction) {
         double points = 0;
         int minMembers = plugin.getConfig().getInt("criteria.management.min-members");

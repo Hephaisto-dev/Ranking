@@ -1,8 +1,9 @@
-package fr.hephaisto.ranking.calculators;
+package fr.hephaisto.ranking.calculation.calculators;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
+import fr.hephaisto.ranking.calculation.AbstractCalculator;
 
 import java.util.OptionalDouble;
 
@@ -11,6 +12,7 @@ public class ActivityCalculator extends AbstractCalculator {
         super(plugin);
     }
 
+    @Override
     public double compute(Faction faction) {
         double minHours = plugin.getConfig().getDouble("criteria.activity.min-hours");
         double percentMinPlayed = faction.getUPlayers().stream()

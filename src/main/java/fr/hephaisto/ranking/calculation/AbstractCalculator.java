@@ -1,4 +1,4 @@
-package fr.hephaisto.ranking.calculators;
+package fr.hephaisto.ranking.calculation;
 
 import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
