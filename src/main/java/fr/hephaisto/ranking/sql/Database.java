@@ -32,14 +32,15 @@ public class Database {
                 return false;
             }
             // Create table if not exists
-            final String[] sql_request = {"CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
+            String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
                     " faction varchar(255), activity int(255), management float(53), economy float(53)," +
                     " military float(53), technology float(53), created_at varchar(255), updated_at varchar(255)," +
                     " build float(53), total float(53), bourse float(53), member int(53));"
-                            .replace("rankhebdo", table_name)};
-            columns_section.getKeys(false).forEach(column ->
-                    sql_request[0] = sql_request[0].replace(column, columns_section.getString(column)));
-            PreparedStatement query = connection.prepareStatement(sql_request[0]);
+                            .replace("rankhebdo", table_name);
+            for (String key : columns_section.getKeys(false))
+                sql_request = sql_request.replace(key, columns_section.getString(key));
+
+            PreparedStatement query = connection.prepareStatement(sql_request);
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
