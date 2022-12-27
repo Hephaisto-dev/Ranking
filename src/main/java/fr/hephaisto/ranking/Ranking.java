@@ -15,8 +15,8 @@ public final class Ranking extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
-        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions());
-        taskManager.scheduleTasks(this);
+        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
+        taskManager.scheduleTasks();
     }
 
     @Override

@@ -13,8 +13,9 @@ import java.util.Map;
 
 public class TaskManager {
     private final List<ComputeTask> factionsComputeTasks = new ArrayList<>();
+    private final Ranking plugin;
 
-    public TaskManager(Map<String, LocalDateTime> lastUpdatesByFactions) {
+    public TaskManager(Map<String, LocalDateTime> lastUpdatesByFactions, Ranking plugin) {
         lastUpdatesByFactions.forEach((factionName, lastUpdate) -> {
             for (FactionColl coll : FactionColls.get().getColls()) {
                 Faction faction = coll.getByName(factionName);
@@ -23,14 +24,19 @@ public class TaskManager {
                 }
             }
         });
+        this.plugin = plugin;
     }
 
-    public void scheduleTasks(Ranking ranking) {
-        factionsComputeTasks.forEach(task -> task.runTaskLaterAsynchronously(ranking,
+    public void scheduleTasks() {
+        factionsComputeTasks.forEach(this::scheduleTask);
+    }
+
+    public void scheduleTask(ComputeTask task) {
+        task.runTaskLaterAsynchronously(plugin,
                 ChronoUnit.SECONDS.between(LocalDateTime.now(),
-                        task.getLastUpdate().plusDays(ranking.getConfig().getLong("frequency.days"))
-                                .withHour(ranking.getConfig().getInt("frequency.hour"))
-                                .withMinute(ranking.getConfig().getInt("frequency.minute")))
-                        * 20));
+                        task.getLastUpdate().plusDays(plugin.getConfig().getLong("frequency.days"))
+                                .withHour(plugin.getConfig().getInt("frequency.hour"))
+                                .withMinute(plugin.getConfig().getInt("frequency.minute")))
+                        * 20);
     }
 }
