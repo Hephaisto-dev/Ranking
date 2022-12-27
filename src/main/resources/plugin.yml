@@ -3,3 +3,7 @@ version: '${version}'
 main: fr.hephaisto.ranking.Ranking
 authors: [ Hephaisto ]
 description: Plugin for in game ranking
+depend:
+  - Factions
+  - WorldOfNations
+  - Vault

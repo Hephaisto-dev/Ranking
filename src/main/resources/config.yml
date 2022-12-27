@@ -1,0 +1,89 @@
+frequency:
+  # Fréquence de calcul en jour
+  days: 7
+  hours: 10
+  minutes: 0
+
+database:
+  # Host de connexion à la base de données à utiliser
+  host: localhost
+  port: 3306
+  # Utilisateur de la base de données à utiliser
+  user: user
+  # Mot de passe de la base de données à utiliser
+  password: password
+  # Nom de la base de données à utiliser
+  database: database
+  # Table de la base de données à utiliser
+  table: table
+  # Noms des colonnes de la base de données à utiliser
+  columns:
+    faction: faction
+    activity: activity
+    management: management
+    economy: economy
+    military: military
+    technology: technology
+    build: build
+
+criteria:
+
+  activity:
+    # Nombre d'heures minimum pour être classé en tant qu'actif dans la faction
+    min-hours: 3.5
+    # Points par pourcentage (Entre 0 et 1) de joueur ayant au moins le nombre d'heures précédent entre deux classements
+    points-per-percent:
+      0.5: 3
+      0.33: 2
+      0.25: 1
+
+  management:
+    # Nombre de membres minimum pour ne pas perdre de point
+    min-members: 5
+    # Nombre de point à perdre si en dessous du seuil précédent
+    points-not-min-member: 5
+    # Nombre de point à perdre si un joueur a quitté la faction depuis le dernier classement
+    points-per-leave: 0.25
+    # Nombre de points par recrue
+    points-per-recruit: 1
+    # Nombre maximum de recrues comptabilisées (seuil où l'on ne les compte plus)
+    max-recruits-points: 6
+    # Nombre de points à gagner par rôle présent
+    points-per-role: 0.25
+    # Multiplicateur point/power
+    power-multiplier: 3
+
+  economy:
+    # Ratio point/argent en banque
+    ratio-points-money: 0.00001
+    # Nombre maximum de points obtenable pour la réserve en banque
+    max-points-money: 5
+    # Ratio point/bénéfice de la semaine
+    ratio-points-week-profit: 0.000025
+    # Nombre maximum de points obtenable pour les bénéfices de la semaine
+    max-points-week-profit: 5
+
+  military:
+    # Nombre de points par allié
+    points-per-ally: 0.5
+    # Nombre maximum d'alliés comptabilisés
+    max-allies: 8
+    # Nombre de points par ennemi
+    points-per-enemy: 1
+    # Nombre maximum d'ennemis comptabilisés
+    max-enemies: 6
+    # Nombre de points pour chaque ratio kill/morts minimum non inclus
+    points-per-kill-death-ratio:
+      2: 3
+      1.5: 2
+      1.01: 1
+      1: 0
+      0: 0
+    # Nombre de points pour chaque ratio d'assaut minimum non inclus
+    points-per-assault-ratio:
+      15: 3
+      5: 2
+      1: 1
+      0: 0
+    # Ratio point/ScoreZone
+    ratio-points-scorezone: 0.008
