@@ -15,20 +15,20 @@ public class ActivityCalculator implements Calculator {
 
     public int compute(Faction faction) {
         double minHours = plugin.getConfig().getDouble("criteria.activity.min-hours");
-        double l = faction.getUPlayers().stream()
+        double percentMinPlayed = faction.getUPlayers().stream()
                 .map(this::retrieveOnlineTime)
                 .map(this::toHours)
                 .filter(hours -> hours >= minHours)
                 .count() * 1.0 / faction.getUPlayers().size();
-        OptionalDouble optionalDouble = plugin.getConfig()
+        OptionalDouble optionalConfigPercent = plugin.getConfig()
                 .getConfigurationSection("criteria.activity.points-per-percent").getKeys(false)
                 .stream()
                 .mapToDouble(Double::parseDouble)
-                .filter(percent -> l >= percent)
+                .filter(percent -> percentMinPlayed >= percent)
                 .max();
-        if (optionalDouble.isPresent()) {
+        if (optionalConfigPercent.isPresent()) {
             return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
-                    optionalDouble.getAsDouble());
+                    optionalConfigPercent.getAsDouble());
         }
         return 0;
     }
