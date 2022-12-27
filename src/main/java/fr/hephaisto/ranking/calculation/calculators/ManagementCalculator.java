@@ -14,10 +14,10 @@ public class ManagementCalculator extends AbstractCalculator {
     public double compute(Faction faction) {
         double points = 0;
         int minMembers = plugin.getConfig().getInt("criteria.management.min-members");
-        int pointsNotMinMember = plugin.getConfig().getInt("criteria.management.points-not-min-member");
+        double pointsNotMinMember = plugin.getConfig().getDouble("criteria.management.points-not-min-member");
         double pointsPerLeave = plugin.getConfig().getDouble("criteria.management.points-per-leave");
         double pointsPerRecruit = plugin.getConfig().getDouble("criteria.management.points-per-recruit");
-        int maxRecruitsPoints = plugin.getConfig().getInt("criteria.management.max-recruits-points");
+        double maxRecruitsPoints = plugin.getConfig().getDouble("criteria.management.max-recruits-points");
         double pointsPerRole = plugin.getConfig().getDouble("criteria.management.points-per-role");
         double powerMultiplier = plugin.getConfig().getDouble("criteria.management.power-multiplier");
         if (faction.getUPlayers().size() < minMembers) {
