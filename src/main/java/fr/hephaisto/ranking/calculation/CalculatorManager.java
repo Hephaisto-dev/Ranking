@@ -18,8 +18,8 @@ public class CalculatorManager {
     }
 
     public void compute(Faction faction) {
-        double totalScore = NumberUtils.round(calculators.stream()
-                .mapToDouble(calculator -> NumberUtils.round(calculator.compute(faction)))
+        double totalScore = NumberUtils.floor(calculators.stream()
+                .mapToDouble(calculator -> NumberUtils.floor(calculator.compute(faction)))
                 .sum());
         //TODO update db
     }

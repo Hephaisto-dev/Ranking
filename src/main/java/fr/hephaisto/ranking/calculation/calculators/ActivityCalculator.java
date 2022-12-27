@@ -20,15 +20,16 @@ public class ActivityCalculator extends AbstractCalculator {
                 .map(this::toHours)
                 .filter(hours -> hours >= minHours)
                 .count() * 1.0 / faction.getUPlayers().size();
-        OptionalDouble optionalConfigPercent = plugin.getConfig()
-                .getConfigurationSection("criteria.activity.points-per-percent").getKeys(false)
+        OptionalDouble optionalConfigKey = plugin.getConfig()
+                .getConfigurationSection("criteria.activity.points-per-percent")
+                .getKeys(false)
                 .stream()
                 .mapToDouble(Double::parseDouble)
                 .filter(percent -> percentMinPlayed >= percent)
                 .max();
-        if (optionalConfigPercent.isPresent()) {
+        if (optionalConfigKey.isPresent()) {
             return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
-                    optionalConfigPercent.getAsDouble());
+                    optionalConfigKey.getAsDouble());
         }
         return 0d;
     }
