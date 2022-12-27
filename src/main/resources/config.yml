@@ -1,9 +1,8 @@
 frequency:
   # Fréquence de calcul en jour
   days: 7
-  # Heure de calcul sur le jour donné
-  # Format : HHhMM
-  timestamp: "10h00"
+  hours: 10
+  minutes: 0
 
 database:
   # Host de connexion à la base de données à utiliser

@@ -1,11 +1,12 @@
 package fr.hephaisto.ranking.sql;
 
+import com.massivecraft.factions.Factions;
 import fr.hephaisto.ranking.Ranking;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Database {
@@ -54,5 +55,21 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Map<String, LocalDateTime> getLastUpdatesByFactions(){
+        Map<String, LocalDateTime> timestamps = new HashMap<>();
+        try {
+            PreparedStatement query = dbConnection.getConnection()
+                    .prepareStatement("SELECT updated_at FROM " + table_name);
+            ResultSet resultSet = query.executeQuery();
+            while (resultSet.next()) {
+                timestamps.put(resultSet.getString(columns_section.getString("faction")),
+                        resultSet.getTimestamp("updated_at").toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return timestamps;
     }
 }

@@ -13,6 +13,9 @@ public final class Ranking extends JavaPlugin {
         if (!database.init()) {
             getServer().getPluginManager().disablePlugin(this);
         }
+
+        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions());
+        taskManager.scheduleTasks(this);
     }
 
     @Override
