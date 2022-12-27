@@ -47,7 +47,7 @@ criteria:
     # Nombre de points par recrue
     points-per-recruit: 1
     # Nombre maximum de recrues comptabilisées (seuil où l'on ne les compte plus)
-    max-recruits: 6
+    max-recruits-points: 6
     # Nombre de points à gagner par rôle présent
     points-per-role: 0.25
     # Multiplicateur point/power

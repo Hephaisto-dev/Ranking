@@ -1,6 +1,8 @@
 package fr.hephaisto.ranking;
 
+import fr.hephaisto.ranking.calculators.ActivityCalculator;
 import fr.hephaisto.ranking.calculators.CalculatorManager;
+import fr.hephaisto.ranking.calculators.ManagementCalculator;
 import fr.hephaisto.ranking.listeners.PlayHoursListener;
 import fr.hephaisto.ranking.sql.Database;
 import fr.hephaisto.ranking.tasks.TaskManager;
@@ -24,6 +26,8 @@ public final class Ranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayHoursListener(), this);
 
         calculatorManager = new CalculatorManager();
+        calculatorManager.addCalculator(new ActivityCalculator(this));
+        calculatorManager.addCalculator(new ManagementCalculator(this));
     }
 
     @Override
@@ -33,5 +37,9 @@ public final class Ranking extends JavaPlugin {
 
     public CalculatorManager getCalculatorManager() {
         return calculatorManager;
+    }
+
+    public Database getDb() {
+        return database;
     }
 }

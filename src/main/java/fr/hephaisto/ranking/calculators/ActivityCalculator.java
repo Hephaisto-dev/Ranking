@@ -6,14 +6,12 @@ import fr.hephaisto.ranking.Ranking;
 
 import java.util.OptionalDouble;
 
-public class ActivityCalculator implements Calculator {
-    private final Ranking plugin;
-
+public class ActivityCalculator extends AbstractCalculator {
     public ActivityCalculator(Ranking plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
-    public int compute(Faction faction) {
+    public double compute(Faction faction) {
         double minHours = plugin.getConfig().getDouble("criteria.activity.min-hours");
         double percentMinPlayed = faction.getUPlayers().stream()
                 .map(this::retrieveOnlineTime)
@@ -30,7 +28,7 @@ public class ActivityCalculator implements Calculator {
             return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
                     optionalConfigPercent.getAsDouble());
         }
-        return 0;
+        return 0d;
     }
 
     private long retrieveOnlineTime(UPlayer uPlayer) {
