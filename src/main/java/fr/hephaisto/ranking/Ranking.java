@@ -1,6 +1,7 @@
 package fr.hephaisto.ranking;
 
 import fr.hephaisto.ranking.sql.Database;
+import fr.hephaisto.ranking.tasks.TaskManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Ranking extends JavaPlugin {

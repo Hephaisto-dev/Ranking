@@ -1,4 +1,4 @@
-package fr.hephaisto.ranking;
+package fr.hephaisto.ranking.tasks;
 
 import com.massivecraft.factions.entity.Faction;
 import org.bukkit.scheduler.BukkitRunnable;

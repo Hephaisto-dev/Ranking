@@ -1,8 +1,9 @@
-package fr.hephaisto.ranking;
+package fr.hephaisto.ranking.tasks;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.FactionColls;
+import fr.hephaisto.ranking.Ranking;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
