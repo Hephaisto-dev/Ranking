@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 public class Database {
     private final DbConnection dbConnection;
-    private String table_name;
-    private ConfigurationSection columns_section;
+    private final String table_name;
+    private final ConfigurationSection columns_section;
 
     public Database(Ranking plugin) {
         dbConnection = new DbConnection(new DbCredentials(
