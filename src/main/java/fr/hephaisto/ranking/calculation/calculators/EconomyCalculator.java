@@ -25,7 +25,6 @@ public class EconomyCalculator extends AbstractCalculator {
     }
 
     private double getLastBalance(Faction faction) {
-        //TODO get last week profit from db
-        return 0;
+        return plugin.getDb().getBourse(faction);
     }
 }

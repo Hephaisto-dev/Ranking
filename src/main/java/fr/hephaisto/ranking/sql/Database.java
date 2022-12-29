@@ -1,5 +1,6 @@
 package fr.hephaisto.ranking.sql;
 
+import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -61,7 +62,7 @@ public class Database {
         }
     }
 
-    public Map<String, LocalDateTime> getLastUpdatesByFactions(){
+    public Map<String, LocalDateTime> getLastUpdatesByFactions() {
         Map<String, LocalDateTime> timestamps = new HashMap<>();
         try {
             PreparedStatement query = dbConnection.getConnection()
@@ -87,5 +88,22 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public long getBourse(Faction faction) {
+        try {
+            PreparedStatement query = dbConnection.getConnection()
+                    .prepareStatement("SELECT bourse FROM " + table_name + " WHERE " +
+                            columns_section.getString("faction") + " = ?");
+            query.setString(1, faction.getName());
+            ResultSet resultSet = query.executeQuery();
+            if(!resultSet.next())
+            {
+                return resultSet.getInt(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
