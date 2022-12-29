@@ -76,4 +76,16 @@ public class Database {
         }
         return timestamps;
     }
+
+    public void updateFactionName(String oldName, String newName) {
+        try {
+            PreparedStatement query = dbConnection.getConnection()
+                    .prepareStatement("UPDATE " + table_name + " SET " + columns_section.getString("faction") + " = ? WHERE " + columns_section.getString("faction") + " = ?");
+            query.setString(1, newName);
+            query.setString(2, oldName);
+            query.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

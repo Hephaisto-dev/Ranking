@@ -1,0 +1,21 @@
+package fr.hephaisto.ranking.listeners;
+
+import com.massivecraft.factions.event.EventFactionsNameChange;
+import fr.hephaisto.ranking.Ranking;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+public class FactionListener implements Listener {
+    private final Ranking ranking;
+
+    public FactionListener(Ranking ranking) {
+        this.ranking = ranking;
+    }
+
+    @EventHandler
+    public void onFactionNameChange(EventFactionsNameChange event) {
+        String old_name = event.getFaction().getName();
+        String new_name = event.getNewName();
+        ranking.getDb().updateFactionName(old_name, new_name);
+    }
+}

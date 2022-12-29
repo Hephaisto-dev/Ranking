@@ -2,6 +2,7 @@ package fr.hephaisto.ranking;
 
 import fr.hephaisto.ranking.calculation.calculators.EconomyCalculator;
 import fr.hephaisto.ranking.calculation.calculators.MilitaryCalculator;
+import fr.hephaisto.ranking.listeners.FactionListener;
 import fr.hephaisto.ranking.listeners.MemberFlowListener;
 import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
 import fr.hephaisto.ranking.calculation.CalculatorManager;
@@ -18,22 +19,34 @@ public final class Ranking extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        // Init the database
         database = new Database(this);
         if (!database.init()) {
             getServer().getPluginManager().disablePlugin(this);
         }
 
-        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
-        taskManager.scheduleTasks();
+        setupTasks();
+        registerListeners();
+        setupCalculators();
+    }
 
-        getServer().getPluginManager().registerEvents(new PlayHoursListener(), this);
-        getServer().getPluginManager().registerEvents(new MemberFlowListener(), this);
-
+    private void setupCalculators() {
         calculatorManager = new CalculatorManager();
         calculatorManager.addCalculator(new ActivityCalculator(this));
         calculatorManager.addCalculator(new ManagementCalculator(this));
         calculatorManager.addCalculator(new MilitaryCalculator(this));
         calculatorManager.addCalculator(new EconomyCalculator(this));
+    }
+
+    private void setupTasks() {
+        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
+        taskManager.scheduleTasks();
+    }
+
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new PlayHoursListener(), this);
+        getServer().getPluginManager().registerEvents(new MemberFlowListener(), this);
+        getServer().getPluginManager().registerEvents(new FactionListener(this), this);
     }
 
     @Override
