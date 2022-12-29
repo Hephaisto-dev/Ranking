@@ -31,7 +31,7 @@ public final class Ranking extends JavaPlugin {
     }
 
     private void setupCalculators() {
-        calculatorManager = new CalculatorManager();
+        calculatorManager = new CalculatorManager(this);
         calculatorManager.addCalculator(new ActivityCalculator(this));
         calculatorManager.addCalculator(new ManagementCalculator(this));
         calculatorManager.addCalculator(new MilitaryCalculator(this));

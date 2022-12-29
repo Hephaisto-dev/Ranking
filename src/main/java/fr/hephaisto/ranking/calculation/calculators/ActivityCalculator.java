@@ -42,4 +42,9 @@ public class ActivityCalculator extends AbstractCalculator {
     private long toHours(long millis) {
         return millis / 3600000;
     }
+
+    @Override
+    public String getConfigKey() {
+        return "activity";
+    }
 }

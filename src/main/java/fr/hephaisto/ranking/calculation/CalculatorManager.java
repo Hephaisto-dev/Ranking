@@ -1,15 +1,20 @@
 package fr.hephaisto.ranking.calculation;
 
 import com.massivecraft.factions.entity.Faction;
+import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.utils.NumberUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CalculatorManager {
     private final List<Calculator> calculators;
+    private final Ranking plugin;
 
-    public CalculatorManager() {
+    public CalculatorManager(Ranking plugin) {
+        this.plugin = plugin;
         calculators = new ArrayList<>();
     }
 
@@ -18,9 +23,13 @@ public class CalculatorManager {
     }
 
     public void compute(Faction faction) {
-        double totalScore = NumberUtils.floor(calculators.stream()
-                .mapToDouble(calculator -> NumberUtils.floor(calculator.compute(faction)))
-                .sum());
-        //TODO update db
+        Map<Calculator, Double> computedScore = new HashMap<>();
+        double totalScore = 0;
+        for (Calculator calculator : calculators) {
+            double roundedScore = NumberUtils.floor(calculator.compute(faction));
+            computedScore.put(calculator, roundedScore);
+            totalScore += roundedScore;
+        }
+        plugin.getDb().updateFactionScore(faction, computedScore, totalScore);
     }
 }

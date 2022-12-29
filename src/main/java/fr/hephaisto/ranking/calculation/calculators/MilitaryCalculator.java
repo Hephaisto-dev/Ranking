@@ -78,4 +78,9 @@ public class MilitaryCalculator extends AbstractCalculator {
     private double getEnemyCount(Faction faction) {
         return faction.getRelationWishes().values().stream().filter(r -> r == Rel.ALLY).count();
     }
+
+    @Override
+    public String getConfigKey() {
+        return "military";
+    }
 }

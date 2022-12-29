@@ -27,4 +27,9 @@ public class EconomyCalculator extends AbstractCalculator {
     private double getLastBalance(Faction faction) {
         return plugin.getDb().getBourse(faction);
     }
+
+    @Override
+    public String getConfigKey() {
+        return "economy";
+    }
 }

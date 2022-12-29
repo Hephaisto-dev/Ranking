@@ -47,4 +47,9 @@ public class ManagementCalculator extends AbstractCalculator {
                         uPlayer.getRole() == Rel.LEADER)
                 .count();
     }
+
+    @Override
+    public String getConfigKey() {
+        return "management";
+    }
 }

@@ -2,12 +2,12 @@ package fr.hephaisto.ranking.sql;
 
 import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
+import fr.hephaisto.ranking.calculation.Calculator;
 import org.bukkit.configuration.ConfigurationSection;
+import world.nations.Core;
+import world.nations.stats.data.FactionData;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class Database {
             }
             // Create table if not exists
             String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
-                    " faction varchar(255), activity int(255), management float(53), economy float(53)," +
+                    " faction varchar(255), activity float(53), management float(53), economy float(53)," +
                     " military float(53), technology float(53), created_at varchar(255), updated_at varchar(255)," +
                     " build float(53), total float(53), bourse float(53), member int(53));";
             sql_request = sql_request.replace("rankhebdo", table_name);
@@ -81,7 +81,7 @@ public class Database {
     public void updateFactionName(String oldName, String newName) {
         try {
             PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("UPDATE " + table_name + " SET " + columns_section.getString("faction") + " = ? WHERE " + columns_section.getString("faction") + " = ?");
+                    .prepareStatement("UPDATE " + table_name + " SET " + columns_section.getString("faction") + " = ? WHERE " + columns_section.getString("faction") + " = ?;");
             query.setString(1, newName);
             query.setString(2, oldName);
             query.executeUpdate();
@@ -94,7 +94,7 @@ public class Database {
         try {
             PreparedStatement query = dbConnection.getConnection()
                     .prepareStatement("SELECT bourse FROM " + table_name + " WHERE " +
-                            columns_section.getString("faction") + " = ?");
+                            columns_section.getString("faction") + " = ?;");
             query.setString(1, faction.getName());
             ResultSet resultSet = query.executeQuery();
             if(!resultSet.next())
@@ -105,5 +105,24 @@ public class Database {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public void updateFactionScore(Faction faction, Map<Calculator, Double> computedScore, double totalScore) {
+        StringBuilder sql = new StringBuilder()
+                .append("UPDATE ").append(table_name).append(" SET ");
+        computedScore.forEach((calculator, score) ->
+                sql.append(columns_section.getString(calculator.getConfigKey()))
+                        .append(" = ")
+                        .append(score).append(", "));
+        sql.append("total = ").append(totalScore).append(", bourse = ")
+                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName()))
+                .append(", updated_at = ").append(new Timestamp(System.currentTimeMillis()))
+                .append(" WHERE ").append(columns_section.getString("faction")).append(" = ")
+                .append(faction.getName()).append(";");
+        try {
+            dbConnection.getConnection().prepareStatement(sql.toString()).executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
