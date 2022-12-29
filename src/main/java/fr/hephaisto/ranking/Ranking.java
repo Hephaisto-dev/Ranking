@@ -1,9 +1,11 @@
 package fr.hephaisto.ranking;
 
+import fr.hephaisto.ranking.calculation.calculators.EconomyCalculator;
+import fr.hephaisto.ranking.calculation.calculators.MilitaryCalculator;
 import fr.hephaisto.ranking.listeners.MemberFlowListener;
-import fr.hephaisto.ranking.calculators.ActivityCalculator;
-import fr.hephaisto.ranking.calculators.CalculatorManager;
-import fr.hephaisto.ranking.calculators.ManagementCalculator;
+import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
+import fr.hephaisto.ranking.calculation.CalculatorManager;
+import fr.hephaisto.ranking.calculation.calculators.ManagementCalculator;
 import fr.hephaisto.ranking.listeners.PlayHoursListener;
 import fr.hephaisto.ranking.sql.Database;
 import fr.hephaisto.ranking.tasks.TaskManager;
@@ -30,6 +32,8 @@ public final class Ranking extends JavaPlugin {
         calculatorManager = new CalculatorManager();
         calculatorManager.addCalculator(new ActivityCalculator(this));
         calculatorManager.addCalculator(new ManagementCalculator(this));
+        calculatorManager.addCalculator(new MilitaryCalculator(this));
+        calculatorManager.addCalculator(new EconomyCalculator(this));
     }
 
     @Override

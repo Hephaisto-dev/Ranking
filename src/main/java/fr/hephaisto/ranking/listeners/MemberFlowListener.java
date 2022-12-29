@@ -5,12 +5,13 @@ import com.massivecraft.factions.event.EventFactionsMembershipChange;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFlowListener implements Listener {
 
-    private List<UPlayer> joinedPlayers;
-    private List<UPlayer> leftPlayers;
+    private final List<UPlayer> joinedPlayers = new ArrayList<>();
+    private final List<UPlayer> leftPlayers = new ArrayList<>();
 
     @EventHandler
     public void onMembershipChange(EventFactionsMembershipChange event){

@@ -1,8 +1,9 @@
-package fr.hephaisto.ranking.calculators;
+package fr.hephaisto.ranking.calculation.calculators;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
+import fr.hephaisto.ranking.calculation.AbstractCalculator;
 
 import java.util.OptionalDouble;
 
@@ -11,6 +12,7 @@ public class ActivityCalculator extends AbstractCalculator {
         super(plugin);
     }
 
+    @Override
     public double compute(Faction faction) {
         double minHours = plugin.getConfig().getDouble("criteria.activity.min-hours");
         double percentMinPlayed = faction.getUPlayers().stream()
@@ -18,21 +20,22 @@ public class ActivityCalculator extends AbstractCalculator {
                 .map(this::toHours)
                 .filter(hours -> hours >= minHours)
                 .count() * 1.0 / faction.getUPlayers().size();
-        OptionalDouble optionalConfigPercent = plugin.getConfig()
-                .getConfigurationSection("criteria.activity.points-per-percent").getKeys(false)
+        OptionalDouble optionalConfigKey = plugin.getConfig()
+                .getConfigurationSection("criteria.activity.points-per-percent")
+                .getKeys(false)
                 .stream()
                 .mapToDouble(Double::parseDouble)
                 .filter(percent -> percentMinPlayed >= percent)
                 .max();
-        if (optionalConfigPercent.isPresent()) {
+        if (optionalConfigKey.isPresent()) {
             return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
-                    optionalConfigPercent.getAsDouble());
+                    optionalConfigKey.getAsDouble());
         }
         return 0d;
     }
 
     private long retrieveOnlineTime(UPlayer uPlayer) {
-        //TDOO retrieve online time
+        // TODO retrieve online time
         return 0;
     }
 
