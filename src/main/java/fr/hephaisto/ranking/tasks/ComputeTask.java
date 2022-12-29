@@ -7,18 +7,20 @@ import java.time.LocalDateTime;
 
 public class ComputeTask extends BukkitRunnable {
     private final Faction faction;
-    private final LocalDateTime lastUpdate;
-    private final Ranking ranking;
+    private LocalDateTime lastUpdate;
+    private final Ranking plugin;
 
-    public ComputeTask(Faction faction, LocalDateTime lastUpdate, Ranking ranking) {
+    public ComputeTask(Faction faction, LocalDateTime lastUpdate, Ranking plugin) {
         this.faction = faction;
         this.lastUpdate = lastUpdate;
-        this.ranking = ranking;
+        this.plugin = plugin;
     }
 
     @Override
     public void run() {
-        ranking.getCalculatorManager().compute(faction);
+        plugin.getCalculatorManager().compute(faction);
+        lastUpdate = LocalDateTime.now();
+        plugin.getTaskManager().scheduleTask(this);
     }
 
     public LocalDateTime getLastUpdate() {

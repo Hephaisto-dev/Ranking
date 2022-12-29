@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class Ranking extends JavaPlugin {
     private Database database;
     private CalculatorManager calculatorManager;
+    private TaskManager taskManager;
 
     @Override
     public void onEnable() {
@@ -25,9 +26,9 @@ public final class Ranking extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
+        setupCalculators();
         setupTasks();
         registerListeners();
-        setupCalculators();
     }
 
     private void setupCalculators() {
@@ -39,7 +40,7 @@ public final class Ranking extends JavaPlugin {
     }
 
     private void setupTasks() {
-        TaskManager taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
+        taskManager = new TaskManager(database.getLastUpdatesByFactions(), this);
         taskManager.scheduleTasks();
     }
 
@@ -60,5 +61,9 @@ public final class Ranking extends JavaPlugin {
 
     public Database getDb() {
         return database;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }
