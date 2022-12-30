@@ -45,7 +45,7 @@ public class Database {
             String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
                     " faction varchar(255), activity float(53), management float(53), economy float(53)," +
                     " military float(53), technology float(53), created_at varchar(255), updated_at varchar(255)," +
-                    " build float(53), total float(53), bourse BIGINT;";
+                    " build float(53), total float(53), bourse BIGINT);";
             sql_request = sql_request.replace("rankhebdo", factionTableName);
             for (String key : columnsSection.getKeys(false))
                 sql_request = sql_request.replace(key, columnsSection.getString(key));
