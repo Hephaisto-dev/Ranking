@@ -15,7 +15,8 @@ database:
   # Nom de la base de données à utiliser
   database: database
   # Table de la base de données à utiliser
-  table: table
+  table: rankhebdo
+  table-players: rank_players
   # Noms des colonnes de la base de données à utiliser
   columns:
     faction: faction

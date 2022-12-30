@@ -5,6 +5,9 @@ import com.massivecraft.factions.entity.Faction;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.AbstractCalculator;
 
+import java.util.List;
+import java.util.UUID;
+
 public class ManagementCalculator extends AbstractCalculator {
     public ManagementCalculator(Ranking plugin) {
         super(plugin);
@@ -23,20 +26,25 @@ public class ManagementCalculator extends AbstractCalculator {
         if (faction.getUPlayers().size() < minMembers) {
             points -= pointsNotMinMember;
         }
-        points -= countLeft(faction) * pointsPerLeave;
-        points += Math.min(countRecruits(faction) * pointsPerRecruit, maxRecruitsPoints);
+        List<UUID> oldPlayersUUID = plugin.getDb().getOldPlayers(faction);
+        points -= countLeft(faction, oldPlayersUUID) * pointsPerLeave;
+        points += Math.min(countJoin(faction, oldPlayersUUID) * pointsPerRecruit, maxRecruitsPoints);
         points += countRoles(faction) * pointsPerRole;
         points += (faction.getPower() / faction.getPowerMax()) * powerMultiplier;
         return Math.max(0, points);
     }
 
-    private int countLeft(Faction faction) {
-        //TODO count left
-        return 0;
+    private long countLeft(Faction faction, List<UUID> oldPlayersUUID) {
+        return oldPlayersUUID.stream()
+                .filter(playerUUID -> faction.getUPlayers().stream()
+                        .noneMatch(uPlayer -> uPlayer.getUuid().equals(playerUUID)))
+                .count();
     }
 
-    private int countRecruits(Faction faction) {
-        return faction.getUPlayersWhereRole(Rel.RECRUIT).size();
+    private long countJoin(Faction faction, List<UUID> oldPlayersUUID) {
+        return faction.getUPlayers().stream()
+                .filter(uPlayer -> !oldPlayersUUID.contains(uPlayer.getUuid()))
+                .count();
     }
 
     private long countRoles(Faction faction) {

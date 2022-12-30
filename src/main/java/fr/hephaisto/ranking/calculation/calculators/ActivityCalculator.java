@@ -4,7 +4,9 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.AbstractCalculator;
+import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.OptionalDouble;
 
 public class ActivityCalculator extends AbstractCalculator {
@@ -35,8 +37,12 @@ public class ActivityCalculator extends AbstractCalculator {
     }
 
     private long retrieveOnlineTime(UPlayer uPlayer) {
-        // TODO retrieve online time
-        return 0;
+        Player player = uPlayer.getPlayer();
+        long timePlayed = plugin.getDb().getTimePlayed(uPlayer.getUuid());
+        Map<Player, Long> connectionTime = plugin.getPlayHoursListener().getConnectionTime();
+        if (connectionTime.containsKey(player))
+            timePlayed += System.currentTimeMillis() - connectionTime.get(player);
+        return timePlayed;
     }
 
     private long toHours(long millis) {

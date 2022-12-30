@@ -3,7 +3,6 @@ package fr.hephaisto.ranking;
 import fr.hephaisto.ranking.calculation.calculators.EconomyCalculator;
 import fr.hephaisto.ranking.calculation.calculators.MilitaryCalculator;
 import fr.hephaisto.ranking.listeners.FactionListener;
-import fr.hephaisto.ranking.listeners.MemberFlowListener;
 import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
 import fr.hephaisto.ranking.calculation.CalculatorManager;
 import fr.hephaisto.ranking.calculation.calculators.ManagementCalculator;
@@ -14,8 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Ranking extends JavaPlugin {
     private Database database;
-    private CalculatorManager calculatorManager;
+    private CalculatorManager calculatorManager = new CalculatorManager(this);
     private TaskManager taskManager;
+    private final PlayHoursListener playHoursListener = new PlayHoursListener(this);
 
     @Override
     public void onEnable() {
@@ -32,7 +32,6 @@ public final class Ranking extends JavaPlugin {
     }
 
     private void setupCalculators() {
-        calculatorManager = new CalculatorManager(this);
         calculatorManager.addCalculator(new ActivityCalculator(this));
         calculatorManager.addCalculator(new ManagementCalculator(this));
         calculatorManager.addCalculator(new MilitaryCalculator(this));
@@ -45,8 +44,7 @@ public final class Ranking extends JavaPlugin {
     }
 
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new PlayHoursListener(), this);
-        getServer().getPluginManager().registerEvents(new MemberFlowListener(), this);
+        getServer().getPluginManager().registerEvents(playHoursListener, this);
         getServer().getPluginManager().registerEvents(new FactionListener(this), this);
     }
 
@@ -65,5 +63,9 @@ public final class Ranking extends JavaPlugin {
 
     public TaskManager getTaskManager() {
         return taskManager;
+    }
+
+    public PlayHoursListener getPlayHoursListener() {
+        return playHoursListener;
     }
 }
