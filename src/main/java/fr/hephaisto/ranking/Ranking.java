@@ -15,7 +15,7 @@ public final class Ranking extends JavaPlugin {
     private Database database;
     private CalculatorManager calculatorManager = new CalculatorManager(this);
     private TaskManager taskManager;
-    private final PlayHoursListener playHoursListener = new PlayHoursListener(this);
+    private PlayHoursListener playHoursListener;
 
     @Override
     public void onEnable() {
@@ -23,7 +23,9 @@ public final class Ranking extends JavaPlugin {
         // Init the database
         database = new Database(this);
         if (!database.init()) {
+            getLogger().severe("Failed to connect to the database. Disabling the plugin.");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         setupCalculators();
@@ -44,6 +46,7 @@ public final class Ranking extends JavaPlugin {
     }
 
     private void registerListeners() {
+        playHoursListener = new PlayHoursListener(this);
         getServer().getPluginManager().registerEvents(playHoursListener, this);
         getServer().getPluginManager().registerEvents(new FactionListener(this), this);
     }

@@ -31,3 +31,9 @@ processResources {
         expand props
     }
 }
+
+jar {
+    File file = file('../../../../Serveurs Mc/Spigot 1.7.10/plugins')
+    if (file.exists())
+        destinationDir(file)
+}
