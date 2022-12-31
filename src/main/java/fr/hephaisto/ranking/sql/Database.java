@@ -3,6 +3,7 @@ package fr.hephaisto.ranking.sql;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.FactionColls;
+import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.Calculator;
 import org.bukkit.configuration.ConfigurationSection;
@@ -43,9 +44,9 @@ public class Database {
             //Faction rank table
             Statement statement = connection.createStatement();
             String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
-                    " faction varchar(255), activity float(53), management float(53), economy float(53)," +
-                    " military float(53), technology float(53), created_at varchar(255), updated_at varchar(255)," +
-                    " build float(53), total float(53), bourse BIGINT);";
+                    " faction varchar(255), activity float(53) default 0, management float(53) default 0, economy float(53) default 0," +
+                    " military float(53) default 0, technology float(53) default 0, created_at varchar(255), updated_at varchar(255)," +
+                    " build float(53) default 0, total float(53) default 0, bourse BIGINT default 0);";
             sql_request = sql_request.replace("rankhebdo", factionTableName);
             for (String key : columnsSection.getKeys(false))
                 sql_request = sql_request.replace(key, columnsSection.getString(key));
@@ -169,13 +170,19 @@ public class Database {
         }
     }
 
-    public void updatePlayTime(Player player, long time) {
+    public void updatePlayTime(UPlayer uPlayer, long time) {
         try {
+            if (uPlayer.getFaction().isNone()) return;
             PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("UPDATE ? SET time_played = time_played + ? WHERE uuid = ?;");
+                    .prepareStatement("INSERT INTO ? (time_played, uuid, faction) VALUES (?, ?, ?) ON DUPLICATE KEY " +
+                            "UPDATE ? SET time_played = time_played + ? WHERE uuid = ?;");
             query.setString(1, playersTableName);
             query.setLong(2, time);
-            query.setString(3, player.getUniqueId().toString());
+            query.setString(3, uPlayer.getUuid().toString());
+            query.setString(4, uPlayer.getFactionName());
+            query.setString(5, playersTableName);
+            query.setLong(6, time);
+            query.setString(7, uPlayer.getUuid().toString());
             query.executeUpdate();
             query.close();
         } catch (SQLException e) {

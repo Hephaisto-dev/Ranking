@@ -1,5 +1,8 @@
 package fr.hephaisto.ranking.listeners;
 
+import com.massivecraft.factions.entity.UPlayer;
+import com.massivecraft.factions.entity.UPlayerColl;
+import com.massivecraft.factions.entity.UPlayerColls;
 import fr.hephaisto.ranking.Ranking;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class PlayHoursListener implements Listener {
 
@@ -30,7 +35,14 @@ public class PlayHoursListener implements Listener {
         Player player = event.getPlayer();
         long time = System.currentTimeMillis() - connectionTime.get(player);
         connectionTime.remove(player);
-        plugin.getDb().updatePlayTime(event.getPlayer(), time);
+        for (UPlayerColl coll : UPlayerColls.get().getColls()) {
+            Optional<UPlayer> first = coll.getAll(uPlayer -> uPlayer.getUuid().equals(event.getPlayer().getUniqueId()))
+                    .stream().findFirst();
+            if (first.isPresent()){
+                plugin.getDb().updatePlayTime(first.get(), time);
+                return;
+            }
+        }
     }
 
     public Map<Player, Long> getConnectionTime() {
