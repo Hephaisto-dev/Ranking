@@ -33,7 +33,7 @@ processResources {
 }
 
 jar {
-    File file = file('../../../../Serveurs Mc/Spigot 1.7.10/plugins')
+    File file = file('../../../../Serveurs Mc/1_7_10_server/plugins')
     if (file.exists())
         destinationDir(file)
 }

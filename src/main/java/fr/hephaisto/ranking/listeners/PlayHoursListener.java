@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,14 +30,17 @@ public class PlayHoursListener implements Listener {
     }
 
     @EventHandler
-    public void onLeave(PlayerQuitEvent event){
+    public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        if (!connectionTime.containsKey(player))
+            return;
         long time = System.currentTimeMillis() - connectionTime.get(player);
         connectionTime.remove(player);
         for (UPlayerColl coll : UPlayerColls.get().getColls()) {
-            Optional<UPlayer> first = coll.getAll(uPlayer -> uPlayer.getUuid().equals(event.getPlayer().getUniqueId()))
+            Optional<UPlayer> first = coll.getAll(
+                            uPlayer -> uPlayer.getUuid() != null && uPlayer.getUuid().equals(event.getPlayer().getUniqueId()))
                     .stream().findFirst();
-            if (first.isPresent()){
+            if (first.isPresent()) {
                 plugin.getDb().updatePlayTime(first.get(), time);
                 return;
             }

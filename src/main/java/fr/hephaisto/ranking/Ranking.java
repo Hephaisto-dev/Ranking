@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Ranking extends JavaPlugin {
     private Database database;
-    private CalculatorManager calculatorManager = new CalculatorManager(this);
+    private final CalculatorManager calculatorManager = new CalculatorManager(this);
     private TaskManager taskManager;
     private PlayHoursListener playHoursListener;
 

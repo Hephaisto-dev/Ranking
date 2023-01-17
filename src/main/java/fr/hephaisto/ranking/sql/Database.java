@@ -7,7 +7,6 @@ import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.Calculator;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import world.nations.Core;
 
 import java.sql.*;
@@ -22,12 +21,9 @@ public class Database {
     private final String playersTableName;
 
     public Database(Ranking plugin) {
-        dbConnection = new DbConnection(new DbCredentials(
-                plugin.getConfig().getString("database.host"),
-                plugin.getConfig().getString("database.user"),
-                plugin.getConfig().getString("database.password"),
-                plugin.getConfig().getString("database.database"),
-                plugin.getConfig().getInt("database.port")));
+        dbConnection = new DbConnection(new DbCredentials(plugin.getConfig().getString("database.host"),
+                plugin.getConfig().getString("database.user"), plugin.getConfig().getString("database.password"),
+                plugin.getConfig().getString("database.database"), plugin.getConfig().getInt("database.port")));
         factionTableName = plugin.getConfig().getString("database.table");
         columnsSection = plugin.getConfig().getConfigurationSection("database.columns");
         playersTableName = plugin.getConfig().getString("database.table-players");
@@ -43,17 +39,18 @@ public class Database {
             // Create tables if not exists
             //Faction rank table
             Statement statement = connection.createStatement();
-            String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT," +
-                    " faction varchar(255), activity float(53) default 0, management float(53) default 0, economy float(53) default 0," +
-                    " military float(53) default 0, technology float(53) default 0, created_at varchar(255), updated_at varchar(255)," +
-                    " build float(53) default 0, total float(53) default 0, bourse BIGINT default 0);";
+            String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT, " +
+                    "faction varchar(255), activity float(53) default 0, management float(53) default 0, economy " +
+                    "float(53) default 0, military float(53) default 0, technology float(53) default 0, " +
+                    "created_at varchar(255), updated_at varchar(255), build float(53) default 0, total float" +
+                    "(53) default 0, bourse BIGINT default 0);";
             sql_request = sql_request.replace("rankhebdo", factionTableName);
             for (String key : columnsSection.getKeys(false))
                 sql_request = sql_request.replace(key, columnsSection.getString(key));
             statement.executeUpdate(sql_request);
             //Players table
-            sql_request = "CREATE TABLE IF NOT EXISTS rank_players " +
-                    "(uuid VARCHAR(36), faction VARCHAR(255), time_played BIGINT DEFAULT 0);";
+            sql_request = "CREATE TABLE IF NOT EXISTS rank_players (uuid VARCHAR(36), faction VARCHAR(255), " +
+                    "time_played BIGINT DEFAULT 0);";
             sql_request = sql_request.replace("rank_players", playersTableName);
             statement.executeUpdate(sql_request);
             statement.close();
@@ -74,45 +71,38 @@ public class Database {
 
     public Map<Faction, LocalDateTime> getLastUpdatesByFactions() {
         Map<Faction, LocalDateTime> timestamps = new HashMap<>();
-        try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("SELECT * FROM " + factionTableName);
-            ResultSet resultSet = query.executeQuery();
-            Map<String, LocalDateTime> timestampsByFactionNames = new HashMap<>();
-            while (resultSet.next()) {
-                timestampsByFactionNames.put(resultSet.getString(columnsSection.getString("faction")),
-                        resultSet.getTimestamp("updated_at").toLocalDateTime());
-            }
-            List<Faction> createdFactions = new ArrayList<>();
-            for (FactionColl coll : FactionColls.get().getColls()) {
-                for (Faction faction : coll.getAll()) {
-                    if (!timestampsByFactionNames.containsKey(faction.getName())) {
-                        createdFactions.add(faction);
-                        timestamps.put(faction, LocalDateTime.now());
-                    } else
-                        timestamps.put(faction, timestampsByFactionNames.get(faction.getName()));
+        try (PreparedStatement query = dbConnection.getConnection()
+                .prepareStatement("SELECT * FROM " + factionTableName)) {
+            try (ResultSet resultSet = query.executeQuery()) {
+                Map<String, LocalDateTime> timestampsByFactionNames = new HashMap<>();
+                while (resultSet.next()) {
+                    timestampsByFactionNames.put(resultSet.getString(columnsSection.getString("faction")),
+                            resultSet.getTimestamp("updated_at").toLocalDateTime());
+                }
+                List<Faction> createdFactions = new ArrayList<>();
+                for (FactionColl coll : FactionColls.get().getColls()) {
+                    for (Faction faction : coll.getAll()) {
+                        if (!timestampsByFactionNames.containsKey(faction.getName())) {
+                            createdFactions.add(faction);
+                            timestamps.put(faction, LocalDateTime.now());
+                        } else
+                            timestamps.put(faction, timestampsByFactionNames.get(faction.getName()));
+                    }
+                }
+                for (Faction faction : createdFactions) {
+                    insertFaction(faction.getName());
                 }
             }
-            for (Faction faction : createdFactions) {
-                insertFaction(faction.getName());
-            }
-            clearDeletedFactions(timestampsByFactionNames.keySet());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return timestamps;
     }
 
-    private void clearDeletedFactions(Set<String> factionNames) {
-        for (String factionName : factionNames) {
-            deleteFaction(factionName);
-        }
-    }
-
-    public void deleteFaction(String factionName){
+    public void deleteFaction(String factionName) {
         try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("DELETE FROM " + factionTableName + " WHERE " + columnsSection.getString("faction") + " = ?");
+            PreparedStatement query = dbConnection.getConnection().prepareStatement(
+                    "DELETE FROM " + factionTableName + " WHERE " + columnsSection.getString("faction") + " = ?");
             query.setString(1, factionName);
             query.executeUpdate();
             query.close();
@@ -123,8 +113,9 @@ public class Database {
 
     public void updateFactionName(String oldName, String newName) {
         try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("UPDATE " + factionTableName + " SET " + columnsSection.getString("faction") + " = ? WHERE " + columnsSection.getString("faction") + " = ?;");
+            PreparedStatement query = dbConnection.getConnection().prepareStatement(
+                    "UPDATE " + factionTableName + " SET " + columnsSection.getString(
+                            "faction") + " = ? WHERE " + columnsSection.getString("faction") + " = ?;");
             query.setString(1, newName);
             query.setString(2, oldName);
             query.executeUpdate();
@@ -136,9 +127,9 @@ public class Database {
 
     public long getBourse(Faction faction) {
         try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("SELECT bourse FROM " + factionTableName + " WHERE " +
-                            columnsSection.getString("faction") + " = ?;");
+            PreparedStatement query = dbConnection.getConnection().prepareStatement(
+                    "SELECT bourse FROM " + factionTableName + " WHERE " + columnsSection.getString(
+                            "faction") + " = ?;");
             query.setString(1, faction.getName());
             ResultSet resultSet = query.executeQuery();
             if (resultSet.next()) {
@@ -152,19 +143,18 @@ public class Database {
     }
 
     public void updateFactionScore(Faction faction, Map<Calculator, Double> computedScore, double totalScore) {
-        StringBuilder sql = new StringBuilder()
-                .append("UPDATE ").append(factionTableName).append(" SET ");
-        computedScore.forEach((calculator, score) ->
-                sql.append(columnsSection.getString(calculator.getConfigKey()))
-                        .append(" = ")
+        StringBuilder sql = new StringBuilder().append("UPDATE ").append(factionTableName).append(" SET ");
+        computedScore.forEach(
+                (calculator, score) -> sql.append(columnsSection.getString(calculator.getConfigKey())).append(" = ")
                         .append(score).append(", "));
         sql.append("total = ").append(totalScore).append(", bourse = ")
-                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName()))
-                .append(", updated_at = ").append(new Timestamp(System.currentTimeMillis()))
-                .append(" WHERE ").append(columnsSection.getString("faction")).append(" = ")
-                .append(faction.getName()).append(";");
+                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName())).append(", updated_at = ")
+                .append(new Timestamp(System.currentTimeMillis())).append(" WHERE ")
+                .append(columnsSection.getString("faction")).append(" = ").append(faction.getName()).append(";");
         try {
-            dbConnection.getConnection().prepareStatement(sql.toString()).executeUpdate();
+            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(sql.toString());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -172,17 +162,14 @@ public class Database {
 
     public void updatePlayTime(UPlayer uPlayer, long time) {
         try {
-            if (uPlayer.getFaction().isNone()) return;
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("INSERT INTO ? (time_played, uuid, faction) VALUES (?, ?, ?) ON DUPLICATE KEY " +
-                            "UPDATE ? SET time_played = time_played + ? WHERE uuid = ?;");
-            query.setString(1, playersTableName);
+            if (uPlayer.getFaction().isNone())
+                return;
+            PreparedStatement query = dbConnection.getConnection().prepareStatement(
+                    "INSERT INTO " + playersTableName + " (uuid, time_played, faction) VALUES (?, ?, ?) ON DUPLICATE "
+                            + "KEY UPDATE " + "time_played = time_played + VALUES(time_played);");
+            query.setString(1, uPlayer.getUuid().toString());
             query.setLong(2, time);
-            query.setString(3, uPlayer.getUuid().toString());
-            query.setString(4, uPlayer.getFactionName());
-            query.setString(5, playersTableName);
-            query.setLong(6, time);
-            query.setString(7, uPlayer.getUuid().toString());
+            query.setString(3, uPlayer.getFactionName());
             query.executeUpdate();
             query.close();
         } catch (SQLException e) {
@@ -193,10 +180,8 @@ public class Database {
     public long getTimePlayed(UUID uuid) {
         try {
             PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("SELECT ? FROM ? WHERE uuid = ?;");
-            query.setString(1, "time_played");
-            query.setString(2, playersTableName);
-            query.setString(3, uuid.toString());
+                    .prepareStatement("SELECT time_played FROM " + playersTableName + " WHERE uuid = ?;");
+            query.setString(1, uuid.toString());
             ResultSet resultSet = query.executeQuery();
             if (!resultSet.next()) {
                 return resultSet.getLong("time_played");
@@ -211,16 +196,14 @@ public class Database {
     public List<UUID> getOldPlayers(Faction faction) {
         List<UUID> oldPlayers = new ArrayList<>();
         try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("SELECT ? FROM ? WHERE faction = ?;");
-            query.setString(1, "uuid");
-            query.setString(2, playersTableName);
-            query.setString(3, faction.getName());
-            ResultSet resultSet = query.executeQuery();
+            final String query = "SELECT uuid FROM " + factionTableName + " WHERE faction = ?;";
+            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(query);
+            preparedStatement.setString(1, faction.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 oldPlayers.add(UUID.fromString(resultSet.getString("uuid")));
             }
-            query.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -229,9 +212,9 @@ public class Database {
 
     public void insertFaction(String name) {
         try {
-            PreparedStatement query = dbConnection.getConnection()
-                    .prepareStatement("INSERT INTO " + factionTableName +
-                            " (" + columnsSection.getString("faction") + ", created_at, updated_at) VALUES (?, ?, ?);");
+            PreparedStatement query = dbConnection.getConnection().prepareStatement(
+                    "INSERT INTO " + factionTableName + " (" + columnsSection.getString(
+                            "faction") + ", created_at, updated_at) VALUES (?, ?, ?);");
             query.setString(1, name);
             query.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             query.setTimestamp(3, new Timestamp(System.currentTimeMillis()));

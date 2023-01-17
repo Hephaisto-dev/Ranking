@@ -1,5 +1,6 @@
 frequency:
   # Fréquence de calcul en jour
+  # Lundi 1, Mardi 2, Mercredi 3, Jeudi 4, Vendredi 5, Samedi 6, Dimanche 7
   days: 7
   hours: 10
   minutes: 0
