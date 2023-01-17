@@ -6,6 +6,7 @@ import com.massivecraft.factions.entity.FactionColls;
 import com.massivecraft.factions.entity.UPlayer;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.Calculator;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import world.nations.Core;
 
@@ -84,7 +85,7 @@ public class Database {
                 List<Faction> createdFactions = new ArrayList<>();
                 for (FactionColl coll : FactionColls.get().getColls()) {
                     for (Faction faction : coll.getAll()) {
-                        if (ignoredFactions.contains(faction.getName()))
+                        if (ignoredFactions.contains(ChatColor.stripColor(faction.getName())))
                             continue;
                         if (!timestampsByFactionNames.containsKey(faction.getName())) {
                             createdFactions.add(faction);
