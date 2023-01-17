@@ -19,6 +19,7 @@ public class Database {
     private final String factionTableName;
     private final ConfigurationSection columnsSection;
     private final String playersTableName;
+    private final List<String> ignoredFactions;
 
     public Database(Ranking plugin) {
         dbConnection = new DbConnection(new DbCredentials(plugin.getConfig().getString("database.host"),
@@ -27,6 +28,7 @@ public class Database {
         factionTableName = plugin.getConfig().getString("database.table");
         columnsSection = plugin.getConfig().getConfigurationSection("database.columns");
         playersTableName = plugin.getConfig().getString("database.table-players");
+        ignoredFactions = plugin.getConfig().getStringList("ignored-factions");
     }
 
     public boolean init() {
@@ -82,6 +84,8 @@ public class Database {
                 List<Faction> createdFactions = new ArrayList<>();
                 for (FactionColl coll : FactionColls.get().getColls()) {
                     for (Faction faction : coll.getAll()) {
+                        if (ignoredFactions.contains(faction.getName()))
+                            continue;
                         if (!timestampsByFactionNames.containsKey(faction.getName())) {
                             createdFactions.add(faction);
                             timestamps.put(faction, LocalDateTime.now());

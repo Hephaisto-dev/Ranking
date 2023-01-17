@@ -89,3 +89,8 @@ criteria:
       0: 0
     # Ratio point/ScoreZone
     ratio-points-score-zone: 0.008
+
+ignored-factions:
+  - WarZone
+  - SafeZone
+  - §2Wilderness
