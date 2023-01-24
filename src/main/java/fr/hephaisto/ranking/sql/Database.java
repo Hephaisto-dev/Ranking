@@ -78,9 +78,11 @@ public class Database {
                 .prepareStatement("SELECT * FROM " + factionTableName)) {
             try (ResultSet resultSet = query.executeQuery()) {
                 Map<String, LocalDateTime> timestampsByFactionNames = new HashMap<>();
-                while (resultSet.next()) {
-                    timestampsByFactionNames.put(resultSet.getString(columnsSection.getString("faction")),
-                            resultSet.getTimestamp("updated_at").toLocalDateTime());
+                if (resultSet.next()) {
+                    do {
+                        timestampsByFactionNames.put(resultSet.getString(columnsSection.getString("faction")),
+                                resultSet.getTimestamp("updated_at").toLocalDateTime());
+                    } while (resultSet.next());
                 }
                 List<Faction> createdFactions = new ArrayList<>();
                 for (FactionColl coll : FactionColls.get().getColls()) {
@@ -153,9 +155,9 @@ public class Database {
                 (calculator, score) -> sql.append(columnsSection.getString(calculator.getConfigKey())).append(" = ")
                         .append(score).append(", "));
         sql.append("total = ").append(totalScore).append(", bourse = ")
-                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName())).append(", updated_at = ")
-                .append(new Timestamp(System.currentTimeMillis())).append(" WHERE ")
-                .append(columnsSection.getString("faction")).append(" = ").append(faction.getName()).append(";");
+                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName())).append(", updated_at = \"")
+                .append(new Timestamp(System.currentTimeMillis())).append("\" WHERE ")
+                .append(columnsSection.getString("faction")).append(" = \"").append(faction.getName()).append("\";");
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(sql.toString());
             preparedStatement.executeUpdate();
@@ -188,7 +190,7 @@ public class Database {
                     .prepareStatement("SELECT time_played FROM " + playersTableName + " WHERE uuid = ?;");
             query.setString(1, uuid.toString());
             ResultSet resultSet = query.executeQuery();
-            if (!resultSet.next()) {
+            if (resultSet.next()) {
                 return resultSet.getLong("time_played");
             }
             query.close();
@@ -201,12 +203,14 @@ public class Database {
     public List<UUID> getOldPlayers(Faction faction) {
         List<UUID> oldPlayers = new ArrayList<>();
         try {
-            final String query = "SELECT uuid FROM " + factionTableName + " WHERE faction = ?;";
+            final String query = "SELECT uuid FROM " + playersTableName + " WHERE faction = ?;";
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(query);
             preparedStatement.setString(1, faction.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                oldPlayers.add(UUID.fromString(resultSet.getString("uuid")));
+            if (resultSet.next()) {
+                do {
+                    oldPlayers.add(UUID.fromString(resultSet.getString("uuid")));
+                } while (resultSet.next());
             }
             preparedStatement.close();
         } catch (SQLException e) {
