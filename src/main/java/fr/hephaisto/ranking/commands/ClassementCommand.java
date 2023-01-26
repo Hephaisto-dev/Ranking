@@ -23,6 +23,7 @@ public class ClassementCommand implements CommandExecutor {
                     FactionColls.get().getColls().forEach(factionColl -> factionColl.getAll().stream()
                             .filter(faction -> faction.getName().equalsIgnoreCase(factionName))
                             .forEach(faction -> plugin.getCalculatorManager().compute(faction)));
+                    commandSender.sendMessage("§aClassement calculé pour la faction " + factionName);
                 }
             }
         }
