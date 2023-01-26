@@ -2,6 +2,7 @@ package fr.hephaisto.ranking;
 
 import fr.hephaisto.ranking.calculation.calculators.EconomyCalculator;
 import fr.hephaisto.ranking.calculation.calculators.MilitaryCalculator;
+import fr.hephaisto.ranking.commands.ClassementCommand;
 import fr.hephaisto.ranking.listeners.FactionListener;
 import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
 import fr.hephaisto.ranking.calculation.CalculatorManager;
@@ -31,6 +32,8 @@ public final class Ranking extends JavaPlugin {
         setupCalculators();
         setupTasks();
         registerListeners();
+
+        getCommand("classement").setExecutor(new ClassementCommand(this));
     }
 
     private void setupCalculators() {

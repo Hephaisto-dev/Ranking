@@ -8,3 +8,7 @@ depend:
   - WorldOfNations
   - MassiveCore
   - Vault
+commands:
+  classement:
+    description: Effectue le classement
+    usage: /classement <faction>
