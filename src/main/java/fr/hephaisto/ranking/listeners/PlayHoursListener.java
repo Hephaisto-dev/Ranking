@@ -32,13 +32,17 @@ public class PlayHoursListener implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        savePlayerTime(player);
+    }
+
+    public void savePlayerTime(Player player) {
         if (!connectionTime.containsKey(player))
             return;
         long time = System.currentTimeMillis() - connectionTime.get(player);
         connectionTime.remove(player);
         for (UPlayerColl coll : UPlayerColls.get().getColls()) {
             Optional<UPlayer> first = coll.getAll(
-                            uPlayer -> uPlayer.getUuid() != null && uPlayer.getUuid().equals(event.getPlayer().getUniqueId()))
+                            uPlayer -> uPlayer.getUuid() != null && uPlayer.getUuid().equals(player.getUniqueId()))
                     .stream().findFirst();
             if (first.isPresent()) {
                 plugin.getDb().updatePlayTime(first.get(), time);

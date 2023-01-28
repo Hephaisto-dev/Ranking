@@ -1,15 +1,16 @@
 package fr.hephaisto.ranking;
 
+import fr.hephaisto.ranking.calculation.CalculatorManager;
+import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
 import fr.hephaisto.ranking.calculation.calculators.EconomyCalculator;
+import fr.hephaisto.ranking.calculation.calculators.ManagementCalculator;
 import fr.hephaisto.ranking.calculation.calculators.MilitaryCalculator;
 import fr.hephaisto.ranking.commands.ClassementCommand;
 import fr.hephaisto.ranking.listeners.FactionListener;
-import fr.hephaisto.ranking.calculation.calculators.ActivityCalculator;
-import fr.hephaisto.ranking.calculation.CalculatorManager;
-import fr.hephaisto.ranking.calculation.calculators.ManagementCalculator;
 import fr.hephaisto.ranking.listeners.PlayHoursListener;
 import fr.hephaisto.ranking.sql.Database;
 import fr.hephaisto.ranking.tasks.TaskManager;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Ranking extends JavaPlugin {
@@ -56,6 +57,9 @@ public final class Ranking extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for (Player player : getServer().getOnlinePlayers()){
+            playHoursListener.savePlayerTime(player);
+        }
         database.close();
     }
 

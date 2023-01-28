@@ -7,7 +7,7 @@ import fr.hephaisto.ranking.calculation.AbstractCalculator;
 import world.nations.Core;
 import world.nations.stats.data.FactionData;
 
-import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 public class MilitaryCalculator extends AbstractCalculator {
     public MilitaryCalculator(Ranking plugin) {
@@ -31,43 +31,43 @@ public class MilitaryCalculator extends AbstractCalculator {
         return points;
     }
 
-    private double getKDPoints(FactionData factionData) {
-        double ratioKD = getRatioKD(factionData);
-        OptionalDouble optionalConfigKey = plugin.getConfig()
+    private int getKDPoints(FactionData factionData) {
+        int ratioKD = getRatioKD(factionData);
+        OptionalInt optionalConfigKey = plugin.getConfig()
                 .getConfigurationSection("criteria.military.points-per-kill-death-ratio")
                 .getKeys(false)
                 .stream()
-                .mapToDouble(Double::parseDouble)
+                .mapToInt(Integer::parseInt)
                 .filter(ratio -> ratioKD >= ratio)
                 .max();
         if (optionalConfigKey.isPresent()) {
             return plugin.getConfig().getInt("criteria.military.points-per-kill-death-ratio." +
-                    optionalConfigKey.getAsDouble());
+                    optionalConfigKey.getAsInt());
         }
-        return 0d;
+        return 0;
     }
 
-    private double getRatioKD(FactionData factionData) {
-        return (double) factionData.getKills() / (double) factionData.getDeaths();
+    private int getRatioKD(FactionData factionData) {
+        return (int) (100 * (double) factionData.getKills() / (double) factionData.getDeaths());
     }
 
-    private double getAssaultPoints(FactionData factionData) {
+    private int getAssaultPoints(FactionData factionData) {
         double ratioAssault = getRatioAssault(factionData);
-        OptionalDouble optionalConfigKey = plugin.getConfig()
+        OptionalInt optionalConfigKey = plugin.getConfig()
                 .getConfigurationSection("criteria.military.points-per-assault-ratio")
                 .getKeys(false)
                 .stream()
-                .mapToDouble(Double::parseDouble)
+                .mapToInt(Integer::parseInt)
                 .filter(ratio -> ratioAssault >= ratio)
                 .max();
         if (optionalConfigKey.isPresent()) {
             return plugin.getConfig().getInt("criteria.military.points-per-assault-ratio." +
-                    optionalConfigKey.getAsDouble());
+                    optionalConfigKey.getAsInt());
         }
-        return 0d;
+        return 0;
     }
 
-    private double getRatioAssault(FactionData factionData) {
+    private int getRatioAssault(FactionData factionData) {
         return factionData.getRatio();
     }
 

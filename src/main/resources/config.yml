@@ -33,11 +33,11 @@ criteria:
   activity:
     # Nombre d'heures minimum pour être classé en tant qu'actif dans la faction
     min-hours: 3.5
-    # Points par pourcentage (Entre 0 et 1) de joueur ayant au moins le nombre d'heures précédent entre deux classements
+    # Points par pourcentage de joueur ayant au moins le nombre d'heures précédent entre deux classements
     points-per-percent:
-      0.5: 3
-      0.33: 2
-      0.25: 1
+      55: 3
+      33: 2
+      25: 1
 
   management:
     # Nombre de membres minimum pour ne pas perdre de point
@@ -74,13 +74,13 @@ criteria:
     points-per-enemy: 1
     # Nombre maximum d'ennemis comptabilisés
     max-points-enemies: 6
-    # Nombre de points pour chaque ratio kill/morts minimum non inclus
+    # Nombre de points pour chaque ratio kill/morts * 100 minimum non inclus
     points-per-kill-death-ratio:
-      2: 3
-      1.5: 2
-      1.01: 1
-      1: 0
-      0: 0
+      200: 3
+      150: 2
+      101: 1
+      100: 0
+      0: -1
     # Nombre de points pour chaque ratio d'assaut minimum non inclus
     points-per-assault-ratio:
       15: 3

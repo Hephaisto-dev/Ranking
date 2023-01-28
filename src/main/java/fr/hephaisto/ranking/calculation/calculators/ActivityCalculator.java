@@ -7,7 +7,7 @@ import fr.hephaisto.ranking.calculation.AbstractCalculator;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 public class ActivityCalculator extends AbstractCalculator {
     public ActivityCalculator(Ranking plugin) {
@@ -21,17 +21,17 @@ public class ActivityCalculator extends AbstractCalculator {
                 .map(this::retrieveOnlineTime)
                 .map(this::toHours)
                 .filter(hours -> hours >= minHours)
-                .count() * 1.0 / faction.getUPlayers().size();
-        OptionalDouble optionalConfigKey = plugin.getConfig()
+                .count() * 100.0 / faction.getUPlayers().size();
+        OptionalInt optionalConfigKey = plugin.getConfig()
                 .getConfigurationSection("criteria.activity.points-per-percent")
                 .getKeys(false)
                 .stream()
-                .mapToDouble(Double::parseDouble)
+                .mapToInt(Integer::parseInt)
                 .filter(percent -> percentMinPlayed >= percent)
                 .max();
         if (optionalConfigKey.isPresent()) {
-            return plugin.getConfig().getInt("criteria.activity.points-per-percent." +
-                    optionalConfigKey.getAsDouble());
+            return plugin.getConfig()
+                    .getInt("criteria.activity.points-per-percent." + optionalConfigKey.getAsInt());
         }
         return 0d;
     }
