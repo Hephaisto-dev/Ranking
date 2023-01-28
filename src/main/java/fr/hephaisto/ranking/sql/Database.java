@@ -52,7 +52,7 @@ public class Database {
                 sql_request = sql_request.replace(key, columnsSection.getString(key));
             statement.executeUpdate(sql_request);
             //Players table
-            sql_request = "CREATE TABLE IF NOT EXISTS rank_players (uuid VARCHAR(36), faction VARCHAR(255), " +
+            sql_request = "CREATE TABLE IF NOT EXISTS rank_players (uuid VARCHAR(36) PRIMARY KEY, faction VARCHAR(255), " +
                     "time_played BIGINT DEFAULT 0);";
             sql_request = sql_request.replace("rank_players", playersTableName);
             statement.executeUpdate(sql_request);
