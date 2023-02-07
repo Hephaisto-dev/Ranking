@@ -21,7 +21,7 @@ public class EconomyCalculator extends AbstractCalculator {
         double balance = Core.getPlugin().getEconomyManager().getBalance(faction.getName());
         points += Math.min(Money.get(faction) * ratioPointsMoney, maxPointsMoney);
         points += Math.min((balance - getLastBalance(faction)) * ratioPointsWeekProfit, maxPointsWeekProfit);
-        return points;
+        return Math.max(0, points);
     }
 
     private double getLastBalance(Faction faction) {

@@ -45,8 +45,7 @@ public class Database {
             String sql_request = "CREATE TABLE IF NOT EXISTS rankhebdo(id int(255) PRIMARY KEY AUTO_INCREMENT, " +
                     "faction varchar(255), activity float(53) default 0, management float(53) default 0, economy " +
                     "float(53) default 0, military float(53) default 0, technology float(53) default 0, " +
-                    "created_at varchar(255), updated_at varchar(255), build float(53) default 0, total float" +
-                    "(53) default 0, bourse BIGINT default 0);";
+                    "created_at varchar(255), updated_at varchar(255), build float(53) default 0, bourse BIGINT default 0);";
             sql_request = sql_request.replace("rankhebdo", factionTableName);
             for (String key : columnsSection.getKeys(false))
                 sql_request = sql_request.replace(key, columnsSection.getString(key));
@@ -106,18 +105,6 @@ public class Database {
         return timestamps;
     }
 
-    public void deleteFaction(String factionName) {
-        try {
-            PreparedStatement query = dbConnection.getConnection().prepareStatement(
-                    "DELETE FROM " + factionTableName + " WHERE " + columnsSection.getString("faction") + " = ?");
-            query.setString(1, factionName);
-            query.executeUpdate();
-            query.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void updateFactionName(String oldName, String newName) {
         try {
             PreparedStatement query = dbConnection.getConnection().prepareStatement(
@@ -149,17 +136,22 @@ public class Database {
         return 0;
     }
 
-    public void updateFactionScore(Faction faction, Map<Calculator, Double> computedScore, double totalScore) {
-        StringBuilder sql = new StringBuilder().append("UPDATE ").append(factionTableName).append(" SET ");
-        computedScore.forEach(
-                (calculator, score) -> sql.append(columnsSection.getString(calculator.getConfigKey())).append(" = ")
-                        .append(score).append(", "));
-        sql.append("total = ").append(totalScore).append(", bourse = ")
-                .append(Core.getPlugin().getEconomyManager().getBalance(faction.getName())).append(", updated_at = \"")
-                .append(new Timestamp(System.currentTimeMillis())).append("\" WHERE ")
-                .append(columnsSection.getString("faction")).append(" = \"").append(faction.getName()).append("\";");
+    public void updateFactionScore(Faction faction, Map<Calculator, Double> computedScore) {
+        StringBuilder sql = new StringBuilder().append("INSERT INTO ").append(factionTableName).append(" (");
+        computedScore.forEach((calculator, score) -> {
+            sql.append(calculator.getConfigKey()).append(", ");
+        });
+        sql.append("faction, updated_at, bourse, created_at) VALUES (");
+        computedScore.forEach((calculator, score) -> {
+            sql.append(score).append(", ");
+        });
+        sql.append("?, ?, ?)");
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(sql.toString());
+            preparedStatement.setString(1, faction.getName());
+            preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setDouble(3, Core.getPlugin().getEconomyManager().getBalance(faction.getName()));
+            preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {

@@ -24,12 +24,10 @@ public class CalculatorManager {
 
     public void compute(Faction faction) {
         Map<Calculator, Double> computedScore = new HashMap<>();
-        double totalScore = 0;
         for (Calculator calculator : calculators) {
             double roundedScore = NumberUtils.floor(calculator.compute(faction));
             computedScore.put(calculator, roundedScore);
-            totalScore += roundedScore;
         }
-        plugin.getDb().updateFactionScore(faction, computedScore, totalScore);
+        plugin.getDb().updateFactionScore(faction, computedScore);
     }
 }

@@ -18,7 +18,6 @@ public class DbConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(dbCredentials.toURI(), dbCredentials.getUser(), dbCredentials.getPass());
-
             Logger.getLogger("Minecraft").info("Connection to database established");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

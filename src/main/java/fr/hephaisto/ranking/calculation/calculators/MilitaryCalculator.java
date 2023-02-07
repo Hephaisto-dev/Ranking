@@ -28,7 +28,7 @@ public class MilitaryCalculator extends AbstractCalculator {
         points += getKDPoints(factionData);
         points += getAssaultPoints(factionData);
         points += factionData.getScorezone() * ratioPointsScoreZone;
-        return points;
+        return Math.max(0, points);
     }
 
     private int getKDPoints(FactionData factionData) {

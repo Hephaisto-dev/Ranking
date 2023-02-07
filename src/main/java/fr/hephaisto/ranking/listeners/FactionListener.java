@@ -1,7 +1,6 @@
 package fr.hephaisto.ranking.listeners;
 
 import com.massivecraft.factions.event.EventFactionsCreate;
-import com.massivecraft.factions.event.EventFactionsDisband;
 import com.massivecraft.factions.event.EventFactionsNameChange;
 import fr.hephaisto.ranking.Ranking;
 import org.bukkit.event.EventHandler;
@@ -25,11 +24,5 @@ public class FactionListener implements Listener {
     public void onFactionCreate(EventFactionsCreate event) {
         String name = event.getFactionName();
         ranking.getDb().insertFaction(name);
-    }
-
-    @EventHandler
-    public void onFactionDelete(EventFactionsDisband event){
-        String name = event.getFaction().getName();
-        ranking.getDb().deleteFaction(name);
     }
 }
