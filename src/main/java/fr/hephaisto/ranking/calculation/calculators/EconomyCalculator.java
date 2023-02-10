@@ -1,7 +1,6 @@
 package fr.hephaisto.ranking.calculation.calculators;
 
 import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.massivecore.money.Money;
 import fr.hephaisto.ranking.Ranking;
 import fr.hephaisto.ranking.calculation.AbstractCalculator;
 import world.nations.Core;
@@ -19,9 +18,10 @@ public class EconomyCalculator extends AbstractCalculator {
         double ratioPointsWeekProfit = plugin.getConfig().getDouble("criteria.economy.ratio-points-week-profit");
         double maxPointsWeekProfit = plugin.getConfig().getDouble("criteria.economy.max-points-week-profit");
         double balance = Core.getPlugin().getEconomyManager().getBalance(faction.getName());
-        points += Math.min(Money.get(faction) * ratioPointsMoney, maxPointsMoney);
-        points += Math.min((balance - getLastBalance(faction)) * ratioPointsWeekProfit, maxPointsWeekProfit);
-        return Math.max(0, points);
+        points += Math.min(balance * ratioPointsMoney, maxPointsMoney);
+        points += Math.max(0,
+                Math.min((balance - getLastBalance(faction)) * ratioPointsWeekProfit, maxPointsWeekProfit));
+        return points;
     }
 
     private double getLastBalance(Faction faction) {

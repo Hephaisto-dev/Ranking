@@ -126,7 +126,7 @@ public class Database {
                             "faction") + " = ?;");
             query.setString(1, faction.getName());
             ResultSet resultSet = query.executeQuery();
-            if (resultSet.next()) {
+            if (resultSet.last()) {
                 return resultSet.getInt("bourse");
             }
             query.close();
@@ -142,10 +142,8 @@ public class Database {
             sql.append(calculator.getConfigKey()).append(", ");
         });
         sql.append("faction, updated_at, bourse, created_at) VALUES (");
-        computedScore.forEach((calculator, score) -> {
-            sql.append(score).append(", ");
-        });
-        sql.append("?, ?, ?)");
+        computedScore.forEach((calculator, score) -> sql.append(score).append(", "));
+        sql.append("?, ?, ?, ?)");
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(sql.toString());
             preparedStatement.setString(1, faction.getName());
